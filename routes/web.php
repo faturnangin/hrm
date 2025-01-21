@@ -16,4 +16,6 @@ Route::match(['get', 'post'],'/positions', [CoreController::class, 'positions'])
 Route::match(['get', 'post'],'/units', [CoreController::class, 'units'])->name('units')->middleware('check.session');
 Route::match(['get', 'post'],'/users', [UsersController::class, 'users'])->name('users')->middleware('check.session');
 Route::match(['get', 'post'],'/users/add', [UsersController::class, 'adduser'])->name('adduser')->middleware('check.session');
+Route::match(['get', 'post'],'/users/edit/{id}', [UsersController::class, 'edituser'])->name('edituser')->middleware('check.session');
 Route::match(['get', 'post'],'/profile', [UsersController::class, 'profile'])->name('profile')->middleware('check.session');
+Route::match(['get', 'post'],'/log', [CoreController::class, 'log'])->name('log')->middleware('check.session');

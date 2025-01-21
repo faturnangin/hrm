@@ -176,11 +176,8 @@ class CoreController extends Controller
         $user_id = session('id_user');
         $username = session('username');
         $email = session('email');
-        $api_keys = DB::table('api_keys')->where('user_id', $user_id)->get();
-        
-        $api_logs = DB::table('api_logs')
-        ->where('user_id', $username)
-        ->whereDate('date', now()->format('Y-m-d'))
+        $user_activities = DB::table('user_activities')
+        ->whereDate('date_created', now()->format('Y-m-d'))
         ->get();
         $date = date("Y-m-d");
         if ($request->isMethod('post')) {
@@ -191,18 +188,17 @@ class CoreController extends Controller
                     $start_date = trim($dates[0]);
                     $end_date = trim($dates[1]);
                     $date = $daterange;
-                    $api_logs = DB::table('api_logs')
-                    ->where('user_id', $username)
-                    ->whereDate('date', '>=', $start_date)
-                    ->whereDate('date', '<=', $end_date)
+                    $user_activities = DB::table('user_activities')
+                    ->whereDate('date_created', '>=', $start_date)
+                    ->whereDate('date_created', '<=', $end_date)
                     ->get();
-                    return view('pages.log', compact('type_menu','user_id','api_keys','username','api_logs','date'));
+                    return view('pages.log', compact('type_menu','user_id','user_activities','username','date'));
                 }else{
                     return redirect()->back()->with(['error' => 'Internal Error']);
                 }
             }
         }else{
-            return view('pages.log', compact('type_menu','user_id','api_keys','username','api_logs','date'));
+            return view('pages.log', compact('type_menu','user_id','user_activities','username','date'));
         }
     }
 }

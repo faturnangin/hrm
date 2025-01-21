@@ -19,8 +19,8 @@
                                 <form id="loginForm" method="POST" action="{{ route('auth') }}">
                                     @csrf
                                     <div class="form-group">
-                                        <label class="mb-1"><strong>Email</strong></label>
-                                        <input type="email" name="email" id="email" class="form-control" placeholder="hello@example.com">
+                                        <label class="mb-1"><strong>Username</strong></label>
+                                        <input type="text" name="username" id="username" class="form-control" placeholder="Your Username">
                                     </div>
                                     <div class="form-group">
                                         <label class="mb-1"><strong>Password</strong></label>

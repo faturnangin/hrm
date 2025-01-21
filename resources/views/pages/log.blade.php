@@ -13,12 +13,9 @@
                 <div class="row page-titles mx-0">
                     <div class="col-sm-6 p-md-0">
                         <div class="welcome-text">
-                            <h4>API LOG</h4>
+                            <h4>Activity Log</h4>
                         </div>
                     </div>
-                    {{-- <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
-                        <button data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-primary rounded text-white">+ Create New</button>
-                    </div> --}}
                 </div>
                 <!-- row -->
                 <div class="row">
@@ -42,29 +39,18 @@
                                         <thead>
                                             <tr>
                                                 <th>Date</th>
-                                                
-                                                <th>Request Body</th>
-                                                <th>Response</th>
-                                                <th>Status</th>
+                                                <th>User</th>
+                                                <th>Activity</th>
+                                                <th>IP</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @forelse ($api_logs as $log)
-                                            @php
-                                            $status = $log->status;
-                                            if($status == 4){
-                                                $badge = '<span class="badge light badge-success">Success</span>';
-                                            }elseif($status == 2){
-                                                $badge = '<span class="badge light badge-danger">Failed</span>';
-                                            }else{
-                                                $badge = '<span class="badge light badge-warning">Need Caution</span>';
-                                            }
-                                            @endphp
+                                            @forelse ($user_activities as $log)
                                             <tr style="color: #5a5a5a">
-                                                <td class="text-nowrap">{{$log->date}}</td>
-                                                <td>{{$log->body}}</td>
-                                                <td>{{$log->response_server}}</td>
-                                                <td>{!!$badge!!}</td>
+                                                <td class="text-nowrap">{{$log->date_created}}</td>
+                                                <td>{{$log->user}}</td>
+                                                <td>{{$log->activity}}</td>
+                                                <td>{{$log->ip}}</td>
                                             </tr>
                                             @empty
                                             @endforelse
@@ -72,10 +58,9 @@
                                         <tfoot>
                                             <tr>
                                                 <th>Date</th>
-                                                <th>Endpoint</th>
-                                                <th>Request Body</th>
-                                                <th>Response</th>
-                                                <th>Status</th>
+                                                <th>User</th>
+                                                <th>Activity</th>
+                                                <th>IP</th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -102,34 +87,4 @@
 
 <script src="{{ asset('library/datatables/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/plugins-init/datatables.init.js') }}"></script>
-<script>
-    $(document).ready(function() {
-        $('#editModal').on('show.bs.modal', function(e) {
-            var button = $(e.relatedTarget);
-            var name = button.data('ename');
-            var status = button.data('estatus').toString();
-            var plan = button.data('eplan');
-            var uid = button.data('euid');
-            // Set nilai ke form
-            $('#estatus').selectpicker('val', status);
-            $('#eplan').selectpicker('val', plan);
-            $('#ename').val(name);
-            $('#euid').val(uid);
-        });
-    });
-    </script>
-    <script>
-        $(function() {
-                $('#deleteModal').on('show.bs.modal', function(event) {
-                    var button = $(event.relatedTarget);
-                    var name = button.data('dname');
-                    var uid = button.data('duid');
-                    var modal = $(this);
-                    console.log(name);
-                    console.log(uid);
-                    modal.find('#dname').val(name);
-                    modal.find('#duid').val(uid);
-                });
-            })
-    </script>
 @endpush

@@ -12,17 +12,17 @@ class HomeController extends Controller
         $type_menu = "dashboard";
         $user_id = session('id_user');
         $username = session('username');
-        // $balance = DB::table('users')
-        // ->select('balance')
-        // ->where('id', $user_id)
-        // ->first();
-        // $paid_inv = DB::table('invoices')
-        // ->select('invoice_id')
-        // ->where('userid', $username)
-        // ->where('status', 4)
-        // ->count();
-        // $count2 = DB::table('api_logs')->where('status', 2)->where('user_id',$username)->count();
-        // $count4 = DB::table('api_logs')->where('status', 4)->where('user_id',$username)->count();
-        return view('pages.dashboard', compact('type_menu','user_id','username'));
+        
+        $count_user = DB::table('users')->where('status', 1)->count();
+        $count_login = DB::table('user_activities')->where('activity', 'LOGIN')->count();
+        $count_unit = DB::table('units')->count();
+        $count_role = DB::table('positions')->count();
+        $topUser = DB::table('user_activities')
+        ->select('user', DB::raw('COUNT(*) as login_count'))
+        ->where('activity', 'LOGIN')
+        ->groupBy('user')
+        ->orderByDesc('login_count')
+        ->first();
+        return view('pages.dashboard', compact('type_menu','user_id','username','count_user','count_login','count_unit','count_role','topUser'));
     }
 }

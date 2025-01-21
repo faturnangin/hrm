@@ -84,69 +84,44 @@ class UsersController extends Controller
     public function adduser(Request $request){
         $type_menu = "dashboard";
         if ($request->isMethod('post')) {
-            $fullname = $request->input('fullname');
-            $email = $request->input('email');
-            $password = $request->input('password');
-            $password2 = $request->input('password2');
-            // dd($firstname,$lastname,$email,$password,$password2);
-            if($password != $password2) {
-                return redirect()
-                    ->route('register')
-                    ->with('error', '[40001] ' . QueryHelper::errorcode('40001'));
-            }else{
-                $randomNumber = rand(100, 999);
-                $hashed_password = Hash::make($password);
-                // $username = strtolower(preg_replace('/[^a-zA-Z]/', '', $fullname)) . $randomNumber;
-                $lastUserId = DB::table('users')
-                    ->where('user_id', 'LIKE', 'SP%')
-                    ->orderBy('user_id', 'desc')
-                    ->value('user_id');
-                if ($lastUserId) {
-                    $newIdNumber = (int) substr($lastUserId, 2) + 1;
-                    $newUserId = 'SP' . str_pad($newIdNumber, 4, '0', STR_PAD_LEFT);
-                } else {
-                    $newUserId = 'SP0001';
-                }
-                $plan = "TRIAL";
-                $trial_data = DB::table('products')
-                ->where('product_name', $plan)
-                ->first();
-                $balance = $trial_data->point ? $trial_data->point : 0; 
-
-                $tokenHash = MyFunctions::generate_string(50);
-                $tokenRefresh = MyFunctions::generate_string(65);
-                $dateExpiry = date('Y-m-d H:i:s', strtotime('+365 days'));
-
-                $createUser = DB::table('users')->insert([
-                    'user_id' => $newUserId,
-                    'password' => $hashed_password,
-                    'email' => $email,
-                    'name' => $fullname,
-                    'role' => 'USER',
-                    'plan' => $plan,
-                    'status' => 1,
-                    'balance' => $balance,
-                    'date_created' => now(),
-                    'last_active' => now(),
-                    'token' => $tokenHash,
-                    'token_date' => $dateExpiry,
-                    'token_refresh' => $tokenRefresh]);
-                if($createUser) {
-                    DB::insert("insert into token_logs set token='$tokenHash', date_add=now(), user_id='$newUserId'");
-                    DB::table('notifications')->insert([
-                        'date' => now(),
-                        'user_id' => $newUserId,
-                        'message' => 'Account created successfully',
-                    ]);
-                    return redirect()->route('login.index')->with('success', 'Account created');
-                }else{
-                    return redirect()->route('register')->with('error', 'Failed to register');
-                }
-            }
         }else{
             $units = DB::table('units')->select('name')->get();
             $jobtitles = DB::table('positions')->select('name')->get();
             return view('pages.adduser',compact('type_menu','units','jobtitles'));
+        }
+    }
+
+    public function edituser(Request $request, $id){
+        $type_menu = "dashboard";
+        $user = DB::table('users')->where('user_id', $id)->first();
+        if(!$user){
+            return redirect()->back()->with('error', 'User Not Found!');
+        }
+        if ($request->isMethod('post')) {
+            $username = $request->input('username');
+            $fullname = $request->input('fullname');
+            $joindate = $request->input('joindate');
+            $joindatetime = Carbon::createFromFormat('Y-m-d', $joindate)->format('Y-m-d H:i:s');
+            $unit = $request->input('unit');
+            $jobtitles = $request->input('jobtitles');
+            $jobTitleString = implode(',', $jobtitles);
+            $dataToUpdate = [
+                'user_id' => $username,
+                'name' => $fullname,
+                'role' => $jobTitleString,
+                'unit' => $unit,
+                'join_date' => $joindatetime
+            ];
+            $update = DB::table('users')->where('user_id', $id)->update($dataToUpdate);
+            if($update){
+                return redirect()->back()->with('success', 'User Updated Successfully!');
+            }else{
+                return redirect()->back()->with('error', 'Failed to Update User!');
+            }
+        }else{
+            $units = DB::table('units')->select('name')->get();
+            $jobtitles = DB::table('positions')->select('name')->get();
+            return view('pages.edituser',compact('type_menu','units','jobtitles','user'));
         }
     }
 }

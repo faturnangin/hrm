@@ -15,22 +15,22 @@ class AuthController extends Controller
     {  
         try {
             $this->validate($request, [
-                'email' => 'required|min:3|max:100',
+                'username' => 'required|min:3|max:100',
                 'password' => 'required|max:100'
             ],[
-                'email.required' => 'Email wajib diisi',
-                'email.min' => 'email minimal 4 karakter',
-                'email.max' => 'email maksimal 100 karakter',
+                'username.required' => 'username wajib diisi',
+                'username.min' => 'username minimal 4 karakter',
+                'username.max' => 'username maksimal 100 karakter',
                 'password.required' => 'Kata sandi wajib diisi',
                 'password.max' => 'Kata sandi maksimal 100 karakter'
             ]);
 
-            $usr = $request->email;
+            $usr = $request->username;
             $pwd = $request->password;
             $remember = $request->remember;
             // dd($usr,$pwd,$remember);
             $user = DB::table('users')
-                ->where('email', $usr)
+                ->where('user_id', $usr)
                 ->where('status', 1)
                 ->first();
 
@@ -115,63 +115,44 @@ class AuthController extends Controller
 
     public function register(Request $request){
         if ($request->isMethod('post')) {
+            $username = $request->username;
+            $unit = $request->unit;
+            $jobtitles = $request->input('jobtitles');
+            // dd($jobtitles);
+            $jobTitleString = implode(',', $jobtitles);
+            $joindate = $request->input('joindate');
+            $joindatetime = Carbon::createFromFormat('Y-m-d', $joindate)->format('Y-m-d H:i:s');
             $fullname = $request->input('fullname');
-            $email = $request->input('email');
             $password = $request->input('password');
             $password2 = $request->input('password2');
             // dd($firstname,$lastname,$email,$password,$password2);
             if($password != $password2) {
                 return redirect()
-                    ->route('register')
+                    ->back()
                     ->with('error', '[40001] ' . QueryHelper::errorcode('40001'));
             }else{
                 $randomNumber = rand(100, 999);
                 $hashed_password = Hash::make($password);
-                // $username = strtolower(preg_replace('/[^a-zA-Z]/', '', $fullname)) . $randomNumber;
-                $lastUserId = DB::table('users')
-                    ->where('user_id', 'LIKE', 'SP%')
-                    ->orderBy('user_id', 'desc')
-                    ->value('user_id');
-                if ($lastUserId) {
-                    $newIdNumber = (int) substr($lastUserId, 2) + 1;
-                    $newUserId = 'SP' . str_pad($newIdNumber, 4, '0', STR_PAD_LEFT);
-                } else {
-                    $newUserId = 'SP0001';
-                }
-                $plan = "TRIAL";
-                $trial_data = DB::table('products')
-                ->where('product_name', $plan)
-                ->first();
-                $balance = $trial_data->point ? $trial_data->point : 0; 
-
                 $tokenHash = MyFunctions::generate_string(50);
                 $tokenRefresh = MyFunctions::generate_string(65);
                 $dateExpiry = date('Y-m-d H:i:s', strtotime('+365 days'));
-
                 $createUser = DB::table('users')->insert([
-                    'user_id' => $newUserId,
+                    'user_id' => $username,
                     'password' => $hashed_password,
-                    'email' => $email,
                     'name' => $fullname,
-                    'role' => 'USER',
-                    'plan' => $plan,
+                    'role' => $jobTitleString,
+                    'join_date' => $joindatetime,
+                    'unit' => $unit,
                     'status' => 1,
-                    'balance' => $balance,
                     'date_created' => now(),
                     'last_active' => now(),
                     'token' => $tokenHash,
                     'token_date' => $dateExpiry,
                     'token_refresh' => $tokenRefresh]);
                 if($createUser) {
-                    DB::insert("insert into token_logs set token='$tokenHash', date_add=now(), user_id='$newUserId'");
-                    DB::table('notifications')->insert([
-                        'date' => now(),
-                        'user_id' => $newUserId,
-                        'message' => 'Account created successfully',
-                    ]);
-                    return redirect()->route('login.index')->with('success', 'Account created');
+                    return redirect()->back()->with('success', 'Account created');
                 }else{
-                    return redirect()->route('register')->with('error', 'Failed to register');
+                    return redirect()->back()->with('error', 'Failed to register');
                 }
             }
         }else{

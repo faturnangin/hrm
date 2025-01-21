@@ -4,7 +4,15 @@
   "use strict"
   
   // single select box
-  $(".single-select").select2();
+  $(".single-select").select2({
+    tags: true
+  });
+
+  $(".multi-select2").select2({
+      tags: true, // Mengizinkan menambahkan nilai baru
+      // placeholder: "Pilih atau tambahkan opsi",
+      allowClear: true // Mengizinkan pengguna untuk menghapus pilihan
+  });
 
   // multi select box
   $('.multi-select').select2();

@@ -11,8 +11,8 @@
                     <div class="card-body box-style">
                         <div class="media align-items-center">
                             <div class="media-body me-3">
-                                <h2 class="text-black font-w700">0</h2>
-                                <span class="fs-14">Credit Balance</span>
+                                <h2 class="text-black font-w700">{{$count_user}}</h2>
+                                <span class="fs-14">Employee</span>
                             </div>
                             
                         </div>
@@ -25,8 +25,8 @@
                     <div class="card-body box-style">
                         <div class="media align-items-center">
                             <div class="media-body me-3">
-                                <h2 class="text-black font-w700">0</h2>
-                                <span class="fs-14">Failed Transactions</span>
+                                <h2 class="text-black font-w700">{{$count_login}}</h2>
+                                <span class="fs-14">Login Count</span>
                             </div>
                         </div>
                     </div>
@@ -38,8 +38,8 @@
                     <div class="card-body box-style">
                         <div class="media align-items-center">
                             <div class="media-body me-3">
-                                <h2 class="text-black font-w700">0</h2>
-                                <span class="fs-14">Successful Transactions</span>
+                                <h2 class="text-black font-w700">{{$count_unit}}</h2>
+                                <span class="fs-14">Unit</span>
                             </div>
                         </div>
                     </div>
@@ -51,8 +51,8 @@
                     <div class="card-body box-style">
                         <div class="media align-items-center">
                             <div class="media-body me-3">
-                                <h2 class="text-black font-w700">0</h2>
-                                <span class="fs-14">Paid Invoice</span>
+                                <h2 class="text-black font-w700">{{$count_role}}</h2>
+                                <span class="fs-14">Positions</span>
                             </div>
                         </div>
                     </div>
@@ -64,11 +64,28 @@
                 <div class="card">
                     <div class="card-header d-block border-0 pb-0">
                         <div class="d-flex justify-content-between pb-3">
-                            <h4 class="mb-0 text-black fs-20">API Transactions</h4>
+                            <h4 class="mb-0 text-black fs-20">Most Frequent Login</h4>
                         </div>
                     </div>
-                    <div class="card-body pb-0 px-2 pt-2">
-                        
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="example" class="display" style="min-width: 845px">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Login Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    <tr>
+                                        <td>{{$topUser->user}}</td>
+                                        <td>{{$topUser->login_count}}</td>
+                                        
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>		
             </div>

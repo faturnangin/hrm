@@ -63,7 +63,7 @@
                                                     </div>
                                                     <div class="row mb-2">
                                                         <div class="col-sm-3 col-5">
-                                                            <h5 class="f-w-500">User ID <span class="pull-end">:</span>
+                                                            <h5 class="f-w-500">Username <span class="pull-end">:</span>
                                                             </h5>
                                                         </div>
                                                         <div class="col-sm-9 col-7"><span>{{$user->user_id}}</span>
@@ -71,27 +71,21 @@
                                                     </div>
                                                     <div class="row mb-2">
                                                         <div class="col-sm-3 col-5">
-                                                            <h5 class="f-w-500">Email <span class="pull-end">:</span>
+                                                            <h5 class="f-w-500">Unit <span class="pull-end">:</span>
                                                             </h5>
                                                         </div>
-                                                        <div class="col-sm-9 col-7"><span>{{$user->email}}</span>
+                                                        <div class="col-sm-9 col-7"><span>{{$user->unit}}</span>
                                                         </div>
                                                     </div>
                                                     <div class="row mb-2">
                                                         <div class="col-sm-3 col-5">
-                                                            <h5 class="f-w-500">Phone <span class="pull-end">:</span></h5>
+                                                            <h5 class="f-w-500">Job Title <span class="pull-end">:</span></h5>
                                                         </div>
-                                                        <div class="col-sm-9 col-7"><span>{{$user->phone}}</span>
+                                                        <div class="col-sm-9 col-7"><span>{{$user->role}}</span>
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="row mb-2">
-                                                        <div class="col-sm-3 col-5">
-                                                            <h5 class="f-w-500">Plan <span class="pull-end">:</span></h5>
-                                                        </div>
-                                                        <div class="col-sm-9 col-7"><span>{{$user->plan}}</span>
-                                                        </div>
-                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                             <div id="profile-settings" class="tab-pane fade">

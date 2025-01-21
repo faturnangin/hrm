@@ -61,7 +61,7 @@
                                                 <td>{!!$badge!!}</td>
                                                 <td> 
                                                     <div class="d-flex">
-                                                        <button data-bs-toggle="modal" data-bs-target="#editModal" class="btn btn-primary shadow btn-xs sharp me-1" data-ename="{{$user->name}}" data-estatus="{{$status}}" data-euid="{{$user->user_id}}"><i class="fas fa-pencil-alt"></i></button>
+                                                        <a href="{{ route('edituser', ['id' => $user->user_id]) }}" class="btn btn-primary shadow btn-xs sharp me-1"><i class="fas fa-pencil-alt"></i></a>
 														<button data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-danger shadow btn-xs sharp" data-dname="{{$user->name}}" data-duid="{{$user->user_id}}"><i class="fa fa-trash"></i></button>
 													</div>
                                                 </td>	
